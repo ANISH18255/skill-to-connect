@@ -1,0 +1,24 @@
+{
+    "name": "rural-skillconnect",
+    "version": "2.0.0",
+    "description": "Database-connected skill-to-employment portal for rural youths with multi-language support",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "keywords": [
+        "skills",
+        "employment",
+        "rural-youths",
+        "portal",
+        "mongodb"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.19.2",
+        "mongoose": "^8.5.1"
+    }
+}

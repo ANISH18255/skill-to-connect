@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Rural SkillConnect</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="auth-page-bg">
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<div id="authScreen" class="auth-screen">
+    <div class="auth-brand">
+        <div class="leader-avatar-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Official_Photograph_of_Prime_Minister_Narendra_Modi_by_PMO%2C_2022.jpg"
+                 class="leader-img" alt="Leader Image" />
+        </div>
+        <p class="eyebrow" id="txtEyebrow">Skill to Employment Portal</p>
+        <h1 id="txtMainTitle">Rural SkillConnect</h1>
+        <p class="auth-tagline" id="txtTagline">Find the right skill, complete training, and connect to nearby work.</p>
+    </div>
+
+    <div class="auth-card">
+        <div class="form-field" style="margin-bottom: 20px;">
+            <label style="color: var(--brand-dark); font-weight: bold;" id="lblStateSelect">Select Your State / ರಾಜ್ಯ ಆಯ್ಕೆ ಮಾಡಿ / மாநிலத்தை தேர்வு செய்யவும்</label>
+            <select id="stateLanguageSelect" onchange="handleStateLanguageSwitch(this.value)">
+                <option value="Other">English (Default)</option>
+                <option value="Karnataka">Karnataka (ಕನ್ನಡ)</option>
+                <option value="Tamil Nadu">Tamil Nadu (தமிழ்)</option>
+            </select>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Register</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
+            <div class="auth-role-switch">
+                <button class="role-btn active" id="roleUser" onclick="switchRole('user')">User</button>
+                <button class="role-btn" id="roleAdmin" onclick="switchRole('admin')">Admin</button>
+            </div>
+            <div class="form-field">
+                <label id="lblUsername">Username</label>
+                <input id="loginUsername" type="text" placeholder="Enter your username" />
+            </div>
+            <div class="form-field">
+                <label id="lblPassword">Password</label>
+                <div class="pw-wrap">
+                    <input id="loginPassword" type="password" placeholder="Enter your password" />
+                    <button class="pw-toggle" type="button" onclick="togglePw('loginPassword', this)">👁️</button>
+                </div>
+            </div>
+            <div id="loginError" class="auth-error hidden"></div>
+            <button class="primary full-width" id="btnLoginSubmit" onclick="handleLogin()">Login</button>
+            <p class="auth-hint" id="adminHint" style="display:none">Admin credentials: <strong>admin</strong> / <strong>admin123</strong></p>
+        </div>
+
+        <!-- REGISTER FORM (simplified) -->
+        <div id="registerForm" class="hidden">
+            <p style="font-size:13px;color:var(--muted);margin:0 0 16px;">Create your account. You can fill in more details from your profile after login.</p>
+            <div class="form-field">
+                <label id="lblRegUser">Username</label>
+                <input id="regUsername" type="text" placeholder="Choose a username" autocomplete="username" />
+            </div>
+            <div class="form-field">
+                <label id="lblRegPass">Password</label>
+                <div class="pw-wrap">
+                    <input id="regPassword" type="password" placeholder="Choose a password" autocomplete="new-password" />
+                    <button class="pw-toggle" type="button" onclick="togglePw('regPassword', this)">👁️</button>
+                </div>
+            </div>
+            <div class="form-field">
+                <label id="lblRegConfirm">Confirm Password</label>
+                <div class="pw-wrap">
+                    <input id="regConfirm" type="password" placeholder="Re-enter your password" autocomplete="new-password" />
+                    <button class="pw-toggle" type="button" onclick="togglePw('regConfirm', this)">👁️</button>
+                </div>
+            </div>
+            <div id="registerError" class="auth-error hidden"></div>
+            <div id="registerSuccess" class="auth-success hidden"></div>
+            <button class="primary full-width" id="btnRegisterSubmit" onclick="handleRegister()">Create Account</button>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

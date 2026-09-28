@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Rural SkillConnect</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<div id="portalScreen">
+    <header class="topbar">
+        <div>
+            <p class="eyebrow" id="txtEyebrow">Skill to Employment Portal</p>
+            <h1 id="txtMainTitle" style="font-size:clamp(16px,2.5vw,24px);margin:2px 0 0;font-weight:800;">Rural SkillConnect</h1>
+        </div>
+        <nav class="tabs" aria-label="Portal sections">
+            <button class="tab active" data-view="home" id="navHome">Home</button>
+            <button class="tab" data-view="courses" id="navCourses">Courses</button>
+            <button class="tab" data-view="jobs" id="navJobs">Jobs</button>
+            <button class="tab user-only" data-view="register" id="navProfile">My Profile</button>
+            <button class="tab" data-view="verifier" id="navVerify">Verify Certificate</button>
+            <button class="tab admin-only hidden" data-view="admin" id="navAdmin">Admin <span class="pending-badge hidden" id="adminPendingBadge">0</span></button>
+        </nav>
+        <div class="user-info">
+            <select id="dashboardLanguageSelect" onchange="handleStateLanguageSwitch(this.value === 'Karnataka' ? 'Karnataka' : this.value === 'Tamil Nadu' ? 'Tamil Nadu' : 'Other')" style="min-height:34px;width:auto;padding:4px 8px;font-size:12px;border-radius:8px;">
+                <option value="Other">🌐 English</option>
+                <option value="Karnataka">ಕನ್ನಡ</option>
+                <option value="Tamil Nadu">தமிழ்</option>
+            </select>
+            <span id="welcomeUser" style="font-size:14px;font-weight:700;color:var(--brand-dark);"></span>
+            <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+            <button class="secondary logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </header>
+
+    <!-- JOB INTERVIEW TICKER BAR -->
+    <div id="jobTickerBar" class="job-ticker-bar" style="position:sticky;top:65px;z-index:9;">
+        <span class="ticker-label">🗓️ Upcoming Interviews</span>
+        <div class="ticker-track-wrap">
+            <div class="ticker-track" id="tickerTrack"></div>
+        </div>
+    </div>
+
+    <main>
+        <!-- HOME -->
+        <section id="home" class="view active">
+            <div class="user-only progress-card">
+                <h3>🎯 Your Learning Path</h3>
+                <div class="stepper-wrapper">
+                    <div class="step-node active" id="step1"><div class="circle">1</div><span>Profile Setup</span></div>
+                    <div class="step-node" id="step2"><div class="circle">2</div><span>Training</span></div>
+                    <div class="step-node" id="step3"><div class="circle">3</div><span>Assessment</span></div>
+                    <div class="step-node" id="step4"><div class="circle">4</div><span>Placement</span></div>
+                </div>
+            </div>
+
+            <div class="hero">
+                <div class="hero-copy">
+                    <p class="eyebrow">For rural youths, trainers, and local employers</p>
+                    <h2>Skill up. Get certified. Find work.</h2>
+                    <p>A portal that maps interests to courses, issues certificates after assessments, and connects trained youth to nearby employers.</p>
+                    <div class="hero-actions">
+                        <button class="primary" data-jump="courses">Browse Courses</button>
+                        <button class="secondary" data-jump="jobs">View Jobs</button>
+                    </div>
+                </div>
+                <div class="hero-panel" aria-label="Portal summary">
+                    <div><strong>1,248</strong><span>Youths registered</span></div>
+                    <div><strong>32</strong><span>Training partners</span></div>
+                    <div><strong>418</strong><span>Placed candidates</span></div>
+                </div>
+            </div>
+
+            <div class="success-stories-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Inspiration Center</p>
+                        <h2>Rural Success Stories</h2>
+                    </div>
+                </div>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-badge">Placed</div>
+                        <h3>Ramesh Kumar</h3>
+                        <p class="story-meta">From Belagavi Village → Junior Electrician</p>
+                        <p>"The ITI Extension Hub course gave me functional safety tool configurations. Within 10 days of passing, I got picked up locally!"</p>
+                    </div>
+                    <div class="story-card">
+                        <div class="story-badge">Entrepreneur</div>
+                        <h3>Anitha Devi</h3>
+                        <p class="story-meta">From Salem District → Garment Boutique Owner</p>
+                        <p>"Using the Tailoring training track, I learned precise measurement techniques and pricing matrices. Now running my own shop."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow">
+                <article>
+                    <span>01</span>
+                    <h3>Create profile</h3>
+                    <p>Capture education, village, interests, and current skills.</p>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>Complete course & quiz</h3>
+                    <p>Finish a course, take a 10-question assessment, and earn your certificate.</p>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>Match jobs</h3>
+                    <p>Show nearby employment opportunities and apply with one click.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- COURSES -->
+        <section id="courses" class="view">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Training catalog</p>
+                    <h2>Available courses</h2>
+                </div>
+                <input id="courseSearch" class="search" type="search" placeholder="🔍 Search courses" />
+            </div>
+            <p class="section-note">Complete a course then take the assessment to earn your official certificate.</p>
+            <div id="courseList" class="card-grid"></div>
+        </section>
+
+        <!-- JOBS -->
+        <section id="jobs" class="view">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Placement desk</p>
+                    <h2>Local job openings</h2>
+                </div>
+                <select id="jobFilter" class="search">
+                    <option value="All">All sectors</option>
+                    <option>Computer</option><option>Agriculture</option>
+                    <option>Electrical</option><option>Retail</option>
+                    <option>Tailoring</option><option>Driving</option>
+                </select>
+            </div>
+            <div id="jobList" class="card-grid"></div>
+        </section>
+
+        <!-- MY PROFILE (user-only) -->
+        <section id="register" class="view user-only">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Youth desk</p>
+                    <h2>My Profile</h2>
+                </div>
+                <p>Keep your profile updated to get better course and job suggestions.</p>
+            </div>
+            <form id="youthForm" class="form-grid" onsubmit="return false">
+                <label>Full Name<input id="name" type="text" required placeholder="Example: Anitha Kumar" /></label>
+                <label>Mobile Number<input id="mobile" type="tel" required placeholder="10 digit number" /></label>
+                <label>Village<input id="village" type="text" required placeholder="Village name" /></label>
+                <label>Education
+                    <select id="education" required>
+                        <option value="">Select</option>
+                        <option>10th Pass</option><option>12th Pass</option>
+                        <option>ITI</option><option>Diploma</option><option>Graduate</option>
+                    </select>
+                </label>
+                <label>Interest Area
+                    <select id="interest" required>
+                        <option value="">Select</option>
+                        <option>Computer</option><option>Agriculture</option>
+                        <option>Electrical</option><option>Retail</option>
+                        <option>Tailoring</option><option>Driving</option>
+                    </select>
+                </label>
+                <label>Existing Skill<input id="skill" type="text" placeholder="Example: basic computer, sewing" /></label>
+                <button class="primary form-submit" type="button" onclick="handleProfileSave()">💾 Save Profile</button>
+            </form>
+
+            <div class="resume-generation-box" style="margin-top: 20px;">
+                <h3>⚡ Instant Bio-Data / Resume Maker</h3>
+                <p style="color:var(--muted);margin-bottom:12px;font-size:14px;">Download a standard employment form ready for submittal to nearby offices.</p>
+                <button class="secondary" onclick="triggerInstantResumeEngine()">Generate Resume</button>
+            </div>
+
+            <div id="profileResult" class="result hidden"></div>
+        </section>
+
+        <!-- CERTIFICATE VERIFIER -->
+        <section id="verifier" class="view">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Security Check</p>
+                    <h2>Certificate Verifier</h2>
+                </div>
+            </div>
+            <div style="background:var(--surface);padding:28px;border:1px solid var(--line);border-radius:var(--radius);max-width:500px;box-shadow:var(--shadow-sm);">
+                <label style="display:grid;gap:8px;font-weight:700;font-size:14px;color:var(--muted);">
+                    Enter Certificate Serial Code
+                    <input type="text" id="certSerialInput" placeholder="Ex: SK-9942-IN" />
+                </label>
+                <button class="primary" style="margin-top:16px;width:100%;" onclick="runCertificateValidationCheck()">✅ Validate Certificate</button>
+                <div id="verificationOutput" style="margin-top:18px;font-weight:600;padding:14px;border-radius:8px;" class="hidden"></div>
+            </div>
+        </section>
+
+        <!-- ADMIN -->
+        <section id="admin" class="view admin-only">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Coordinator dashboard</p>
+                    <h2>Admin Overview</h2>
+                </div>
+            </div>
+
+            <!-- Admin: Post Job Form -->
+            <div class="admin-job-form">
+                <h3>➕ Post a New Job Listing</h3>
+                <p>Directly add verified job listings for trained candidates.</p>
+                <div class="form-grid" style="grid-template-columns:repeat(3,1fr);">
+                    <label>Company Name<input id="adminCompany" placeholder="e.g. GreenMart Retail" /></label>
+                    <label>Job Title<input id="adminTitle" placeholder="e.g. Store Assistant" /></label>
+                    <label>Sector
+                        <select id="adminSector">
+                            <option>Retail</option><option>Computer</option>
+                            <option>Agriculture</option><option>Electrical</option>
+                            <option>Tailoring</option><option>Driving</option>
+                        </select>
+                    </label>
+                    <label>Location<input id="adminLocation" placeholder="Town or block" /></label>
+                    <label>Salary<input id="adminSalary" placeholder="e.g. Rs. 12,000/month" /></label>
+                    <label>Required Skill<input id="adminRequiredSkill" placeholder="e.g. customer handling" /></label>
+                    <label>Interview Date <span style="font-weight:400;color:var(--muted)">(optional)</span>
+                        <input id="adminInterviewDate" type="date" />
+                    </label>
+                    <div style="align-self:end;">
+                        <button class="primary" style="width:100%;" onclick="handleAdminJobPost()">Post Job</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending job approvals -->
+            <div id="pendingJobsSection" class="pending-jobs-section hidden">
+                <h3>⏳ Pending Job Approvals <span class="pending-badge" id="pendingCount">0</span></h3>
+                <p>Jobs submitted by users awaiting your approval.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Title</th><th>Company</th><th>Sector</th><th>Location</th><th>Salary</th><th>Actions</th></tr></thead>
+                        <tbody id="pendingJobRows"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="metrics">
+                <article><strong id="metricYouth">0</strong><span>Registered users</span></article>
+                <article><strong id="metricCourses">0</strong><span>Active courses</span></article>
+                <article><strong id="metricJobs">0</strong><span>Open jobs</span></article>
+                <article><strong>34%</strong><span>Placement rate</span></article>
+            </div>
+
+            <h3>Registered Users</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Name</th><th>Username</th><th>Village</th><th>Interest</th><th>Course</th><th>Action</th></tr></thead>
+                    <tbody id="candidateRows"></tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top:28px">Job Listings</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Title</th><th>Company</th><th>Sector</th><th>Location</th><th>Salary</th><th>Action</th></tr></thead>
+                    <tbody id="jobRows"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- APPLY JOB MODAL -->
+<div id="applyModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeApplyModal()">✕</button>
+        <div id="applyFormContent">
+            <h2 class="modal-job-title" id="modalJobTitle">Job Title</h2>
+            <p class="modal-job-meta" id="modalJobMeta">Company · Location · Salary</p>
+            <div class="modal-field"><label>Full Name *</label><input type="text" id="applyName" placeholder="Your full name" /></div>
+            <div class="modal-field"><label>Phone Number *</label><input type="tel" id="applyPhone" placeholder="10-digit mobile number" /></div>
+            <div class="modal-field"><label>Email Address *</label><input type="email" id="applyEmail" placeholder="your@email.com" /></div>
+            <div class="modal-field"><label>Village / City *</label><input type="text" id="applyVillage" placeholder="Where are you from?" /></div>
+            <div class="modal-field">
+                <label>Cover Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+                <textarea id="applyCover" placeholder="Tell the employer why you're a good fit..."></textarea>
+            </div>
+            <div class="modal-field">
+                <label>Upload Resume / Bio-Data *</label>
+                <div class="resume-upload-area">
+                    <input type="file" id="applyResume" accept=".pdf,.doc,.docx,.jpg,.png" onchange="handleResumeSelect(this)" />
+                    <div style="font-size:32px">📄</div>
+                    <p>Click to upload PDF, DOC, or image</p>
+                    <span id="resumeFileName"></span>
+                </div>
+            </div>
+            <div id="applyError" class="auth-error hidden" style="margin-bottom:12px;"></div>
+            <button class="primary full-width" onclick="submitJobApplication()">Submit Application ✓</button>
+        </div>
+        <div id="applySuccess" class="modal-success hidden">
+            <span class="success-icon">🎉</span>
+            <h3>Application Submitted!</h3>
+            <p>Your application has been sent to the employer.<br/>They will contact you on your mobile number soon.</p>
+            <button class="primary" onclick="closeApplyModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div id="quizModal" class="quiz-modal-overlay hidden">
+    <div class="quiz-box">
+        <div class="quiz-header">
+            <h2 id="quizCourseTitle">Course Assessment</h2>
+            <button class="modal-close" onclick="closeQuiz()">✕</button>
+        </div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+        <div class="quiz-counter" id="quizCounter">Question 1 of 10</div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div id="quizFeedback" class="quiz-feedback hidden"></div>
+        <div class="quiz-nav">
+            <button class="secondary" id="quizNextBtn" onclick="quizNext()" style="display:none">Next →</button>
+        </div>
+        <div id="quizResult" class="hidden" style="text-align:center;padding:20px 0;">
+            <div style="font-size:60px;margin-bottom:12px;" id="quizResultEmoji">🎓</div>
+            <h3 id="quizResultTitle" style="margin:0 0 8px;color:var(--brand-dark);font-size:22px;"></h3>
+            <p id="quizResultMsg" style="color:var(--muted);margin:0 0 24px;"></p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button class="primary" id="quizCertBtn" onclick="showCertificate()" style="display:none">🏆 Get Certificate</button>
+                <button class="secondary" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+                <button class="secondary" onclick="closeQuiz()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CERTIFICATE MODAL -->
+<div id="certModal" class="cert-modal-overlay hidden">
+    <div class="cert-box">
+        <div class="cert-inner">
+            <div class="cert-logo">🏅</div>
+            <div class="cert-issuer">Rural SkillConnect · National Training Portal</div>
+            <div class="cert-title-text">Certificate of Completion</div>
+            <div class="cert-subtitle">This certifies that</div>
+            <div class="cert-awarded-to">the following candidate has successfully completed</div>
+            <div class="cert-name" id="certCandidateName">Candidate Name</div>
+            <div class="cert-course-label">Course Completed</div>
+            <div class="cert-course-name" id="certCourseName">Course Title</div>
+            <div class="cert-score" id="certScoreDisplay">Score: 8/10 (80%)</div>
+            <div class="cert-serial" id="certSerial">Certificate ID: SK-0000-IN</div>
+            <div class="cert-date" id="certDate">Issued on: —</div>
+        </div>
+        <div class="cert-actions">
+            <button class="primary" onclick="printCertificate()">🖨️ Print / Save PDF</button>
+            <button class="secondary" onclick="closeCertModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
